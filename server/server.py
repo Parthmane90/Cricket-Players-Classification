@@ -1,20 +1,20 @@
-from flask import Flask, request, jsonify
+import streamlit as st
 import util
 
-app = Flask(__name__)
+# Load saved artifacts
+util.load_saved_artifacts()
 
+def classify_image(image_data):
+    return util.classify_image(image_data)
 
-@app.route('/classify_image', methods=['GET', 'POST'])
-def classify_image():
-    image_data = request.form['image_data']
+def main():
+    st.title("Sports Celebrity Image Classification")
 
-    response = jsonify(util.classify_image(image_data))
+    image_data = st.text_area("Paste your image data here:", "")
 
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    return response
+    if st.button("Classify"):
+        result = classify_image(image_data)
+        st.write("Prediction:", result)
 
 if __name__ == "__main__":
-    print("Starting Python Flask Server For Sports Celebrity Image Classification")
-    util.load_saved_artifacts()
-    app.run(port=5000)
+    main()
